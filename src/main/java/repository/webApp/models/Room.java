@@ -28,9 +28,9 @@ public class Room {
 
     private int seatCountRowG;
 
-    private int seatCountRowI;
+    private int seatCountRowH;
 
-    public Room(int number, int seatCountRowA, int seatCountRowB, int seatCountRowC, int seatCountRowD, int seatCountRowE, int seatCountRowF, int seatCountRowG, int seatCountRowI) {
+    public Room(int number, int seatCountRowA, int seatCountRowB, int seatCountRowC, int seatCountRowD, int seatCountRowE, int seatCountRowF, int seatCountRowG, int seatCountRowH) {
         this.number = number;
         this.seatCountRowA = seatCountRowA;
         this.seatCountRowB = seatCountRowB;
@@ -39,7 +39,7 @@ public class Room {
         this.seatCountRowE = seatCountRowE;
         this.seatCountRowF = seatCountRowF;
         this.seatCountRowG = seatCountRowG;
-        this.seatCountRowI = seatCountRowI;
+        this.seatCountRowH = seatCountRowH;
     }
 
     public Room() {
@@ -118,11 +118,11 @@ public class Room {
         this.seatCountRowG = seatCountRowG;
     }
 
-    public int getSeatCountRowI() {
-        return seatCountRowI;
+    public int getSeatCountRowH() {
+        return seatCountRowH;
     }
 
-    public void setSeatCountRowI(int seatCountRowI) {
-        this.seatCountRowI = seatCountRowI;
+    public void setSeatCountRowH(int seatCountRowH) {
+        this.seatCountRowH = seatCountRowH;
     }
 }
