@@ -42,14 +42,14 @@ public class Session {
         this.movie = movie;
         this.room = room;
         this.timestamp = timestamp;
-        this.seatAvailabilityRowA = Utility.RepeatedCharString("F",room.getSeatCountRowA());
-        this.seatAvailabilityRowB = Utility.RepeatedCharString("F",room.getSeatCountRowB());
-        this.seatAvailabilityRowC = Utility.RepeatedCharString("F",room.getSeatCountRowC());
-        this.seatAvailabilityRowD = Utility.RepeatedCharString("F",room.getSeatCountRowD());
-        this.seatAvailabilityRowE = Utility.RepeatedCharString("F",room.getSeatCountRowE());
-        this.seatAvailabilityRowF = Utility.RepeatedCharString("F",room.getSeatCountRowF());
-        this.seatAvailabilityRowG = Utility.RepeatedCharString("F",room.getSeatCountRowG());
-        this.seatAvailabilityRowH = Utility.RepeatedCharString("F",room.getSeatCountRowH());
+        this.seatAvailabilityRowA = Utility.repeatedCharString("F",room.getSeatCountRowA());
+        this.seatAvailabilityRowB = Utility.repeatedCharString("F",room.getSeatCountRowB());
+        this.seatAvailabilityRowC = Utility.repeatedCharString("F",room.getSeatCountRowC());
+        this.seatAvailabilityRowD = Utility.repeatedCharString("F",room.getSeatCountRowD());
+        this.seatAvailabilityRowE = Utility.repeatedCharString("F",room.getSeatCountRowE());
+        this.seatAvailabilityRowF = Utility.repeatedCharString("F",room.getSeatCountRowF());
+        this.seatAvailabilityRowG = Utility.repeatedCharString("F",room.getSeatCountRowG());
+        this.seatAvailabilityRowH = Utility.repeatedCharString("F",room.getSeatCountRowH());
     }
 
     public Session() {
