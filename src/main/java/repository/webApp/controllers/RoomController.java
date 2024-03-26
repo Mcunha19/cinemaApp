@@ -15,9 +15,8 @@ public class RoomController {
     private RoomRepository roomRepository;
 
     @PostMapping
-    public Room addRoom(Room room){
+    public Room addRoom(@RequestBody Room room){
         roomRepository.save(room);
-        System.out.println(room);
         return room;
     }
 
@@ -29,4 +28,11 @@ public class RoomController {
     public Optional<Room> getRoom(@PathVariable int id){
         return roomRepository.findById(id);
     }
+
+    @DeleteMapping
+    public Room deleteRoom(@RequestBody Room room){
+        roomRepository.delete(room);
+        return room;
+    }
+
 }

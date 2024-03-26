@@ -12,7 +12,7 @@ import repository.webApp.repositories.SessionRepository;
 import repository.webApp.repositories.TicketRepository;
 
 @RestController
-@RequestMapping(path = "apis/ticket")
+@RequestMapping(path = "/apis/ticket")
 public class TicketController {
 
     @Autowired
@@ -23,8 +23,6 @@ public class TicketController {
     @PostMapping
     public void buyTicket(Ticket ticket){
         Session session = Utility.changeSeatAvailability(ticket);
-        System.out.println(session.getSeatAvailabilityRowB());
-        System.out.println(ticket);
         sessionRepository.save(session);
         ticketRepository.save(ticket);
     }

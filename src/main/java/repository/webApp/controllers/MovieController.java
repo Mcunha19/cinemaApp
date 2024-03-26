@@ -16,7 +16,7 @@ public class MovieController {
     private MovieRepository movieRepository;
 
     @PostMapping
-    public Movie addMovie(@Validated Movie movie){
+    public Movie addMovie(@RequestBody @Validated Movie movie){
         movieRepository.save(movie);
         return movie;
     }
@@ -29,5 +29,16 @@ public class MovieController {
     @GetMapping(path = "/{id}")
     public Optional<Movie> getMovie(@PathVariable int id){
         return movieRepository.findById(id);
+    }
+
+    @DeleteMapping
+    public Movie removeMovie(@RequestBody Movie movie){
+        movieRepository.delete(movie);
+        return movie;
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public void removeMovie(@PathVariable int id){
+        movieRepository.deleteById(id);
     }
 }

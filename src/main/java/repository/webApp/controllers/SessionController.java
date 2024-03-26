@@ -14,7 +14,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping(path = "apis/session")
+@RequestMapping(path = "/apis/session")
 public class SessionController {
 
     @Autowired
@@ -41,5 +41,12 @@ public class SessionController {
     @GetMapping(path = "/{id}")
     public Optional<Session> getSession(@PathVariable int id){
         return sessionRepository.findById(id);
+    }
+
+    @DeleteMapping
+    public Optional<Session> deleteSession(@RequestParam int id){
+        Optional<Session> session = sessionRepository.findById(id);
+        sessionRepository.deleteById(id);
+        return session;
     }
 }
