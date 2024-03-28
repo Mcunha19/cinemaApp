@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(path = "/")
-public class websiteController {
+public class WebsiteController {
 
     @GetMapping(path = "/movie")
     public String movie(){
@@ -16,5 +16,10 @@ public class websiteController {
     @GetMapping(path = "/room")
     public String room(){
         return "room";
+    }
+
+    @GetMapping(path = "/session")
+    public String session(){
+        return "session";
     }
 }

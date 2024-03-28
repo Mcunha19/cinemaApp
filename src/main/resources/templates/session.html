@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cinema Index</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script
+                src="https://code.jquery.com/jquery-3.7.1.min.js"
+                integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+                crossorigin="anonymous"></script>
+    </head>
+    <body>
+
+    <script>
+        class TextareaDataManage {
+            constructor() {
+                this.data = null;
+                this.lineNumber = null;
+            }
+            onClickSelectLine(textarea) {
+
+                let text = textarea.value;
+                let before = text.substring(0, textarea.selectionStart);
+                let after = text.substring(textarea.selectionEnd, text.length);
+
+                // Calculate line number based on newlines before the selection
+                this.lineNumber = before.split('\n').length - 1;
+
+                // Calculate start and end positions for the selected line
+                let startPos = before.lastIndexOf("\n") >= 0 ? before.lastIndexOf("\n") + 1 : 0;
+                let endPos = after.indexOf("\n") >= 0 ? textarea.selectionEnd + after.indexOf("\n") : text.length;
+
+                textarea.selectionStart = startPos;
+                textarea.selectionEnd = endPos;
+
+            }
+        }
+
+        const movieData = new TextareaDataManage();
+        const roomData = new TextareaDataManage();
+        const sessionData = new TextareaDataManage();
+    </script>
+        <div class="container-xxl my-md-4">
+
+            <div class="d-block">
+                <h1>Available Sessions:</h1>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Id:</th>
+                        <th scope="col">Movie:</th>
+                        <th scope="col">Room:</th>
+                        <th scope="col">Timestamp:</th>
+                    </tr>
+                    </thead>
+                    <tbody id="sessionTable">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-inline-block align-top">
+                <form class="d-block">
+                    <h1>Create Session:</h1>
+                    <label for="movieData">Select a Movie:</label><br>
+                    <textarea id="movieData" rows="5" cols="30" readonly></textarea><br>
+                    <button type="button" id="selectMovie">Select</button>
+                    <input type="text" id="selectedMovie" readonly><br>
+                    <label for="roomData">Select a Room:</label><br>
+                    <textarea id="roomData" rows="5" cols="30" readonly></textarea><br>
+                    <button type="button" id="selectRoom">Select</button>
+                    <input type="text" id="selectedRoom" readonly><br>
+                    <label for="sessionDate">Session Date:</label><br>
+                    <input type="text" id="sessionDate" name="name"><br>
+                    <label for="sessionTime">Session Time:</label><br>
+                    <input type="text" id="sessionTime" name="genre"><br><br>
+                    <button type="button" id="addSession">Create Session</button>
+                </form>
+            </div>
+
+            <div class="d-inline-block align-top ms-5">
+                <form class="d-block">
+                    <h1>Delete Session:</h1>
+                    <label for="sessionId">Session Id:</label><br>
+                    <input type="text" id="sessionId"><br><br>
+                    <button type="button" id="deleteSession">Delete Session</button>
+                </form>
+            </div>
+        </div>
+
+
+        <script>
+
+            $(document).ready(function() {
+                $('#sessionDate').val("");
+                $('#sessionTime').val("");
+                getMovies();
+                getRooms();
+                getSessions();
+
+                $('#movieData').click(function(event) {
+                    movieData.onClickSelectLine(this);
+                });
+
+                $('#roomData').click(function(event) {
+                    roomData.onClickSelectLine(this);
+                });
+
+                $('#selectMovie').click(function(event) {
+                    $('#selectedMovie').val(movieData.data[movieData.lineNumber].name);
+                });
+
+                $('#selectRoom').click(function(event) {
+                    $('#selectedRoom').val(roomData.data[roomData.lineNumber].number);
+                });
+
+                $('#addSession').click(function(event) {
+                    event.preventDefault();
+                    addSession();
+                    $('#sessionDate').val("");
+                    $('#sessionTime').val("");
+                });
+
+                $('#deleteSession').click(function(event) {
+                    deleteSession();
+                    $('#sessionId').val("");
+                });
+
+            });
+
+            function addSession(){
+                $.ajax({
+                    url: '/apis/session',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        movie: movieData.data[movieData.lineNumber],
+                        room: roomData.data[roomData.lineNumber],
+                        date: $('#sessionDate').val(),
+                        time: $('#sessionTime').val(),
+                    }),
+                    success: function(data) {
+                        getSessions();
+                    }
+                });
+            }
+
+            function deleteSession(){
+                $.ajax({
+                    url: '/apis/session',
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        id: $('#sessionId').val(),
+                    }),
+                    success: function(data) {
+                        getSessions();
+                    }
+                });
+            }
+
+            function getSessions(){
+                $.ajax({
+                    url: '/apis/session',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function(data) {
+                        sessionData.data = data;
+
+                        document.getElementById("sessionTable").replaceChildren();
+
+                        for (let i = 0; i < data.length; i++){
+
+                            const sessionId = document.createElement("td");
+                            const sessionMovie = document.createElement("td");
+                            const sessionRoom = document.createElement("td");
+                            const sessionTimestamp = document.createElement("td");
+                            const sessionRow = document.createElement("tr");
+
+                            sessionId.textContent = data[i].id;
+                            sessionMovie.textContent = data[i].movie.name;
+                            sessionRoom.textContent = data[i].room.number;
+                            sessionTimestamp.textContent = data[i].timestamp;
+
+                            sessionRow.appendChild(sessionId);
+                            sessionRow.appendChild(sessionMovie);
+                            sessionRow.appendChild(sessionRoom);
+                            sessionRow.appendChild(sessionTimestamp);
+
+                            document.getElementById("sessionTable").appendChild(sessionRow);
+                        }
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("Error:", textStatus, errorThrown);
+                    }
+                });
+            }
+
+            function getMovies(){
+                $.ajax({
+                    url: '/apis/movie',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    //data: JSON.stringify(data),
+                    success: function(data) {
+                        movieData.data = data;
+                        const movieNames = data.map(movie => movie.name).join("\n");
+                        $('#movieData').val(movieNames);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("Error:", textStatus, errorThrown);
+                    }
+                });
+            }
+
+            function getRooms(){
+                $.ajax({
+                    url: '/apis/room',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    //data: JSON.stringify(data),
+                    success: function(data) {
+                        roomData.data = data;
+                        const roomNumbers = data.map(room => room.number).join("\n");
+                        $('#roomData').val(roomNumbers);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("Error:", textStatus, errorThrown);
+                    }
+                });
+            }
+
+
+
+
+
+        </script>
+
+    </body>
+
+</html>
