@@ -10,27 +10,31 @@
                 integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
                 crossorigin="anonymous"></script>
         <script>
-            const roomData = {
-                data: null,
-                lineNumber : null,
-            };
+            class TextareaDataManage {
+                constructor() {
+                    this.data = null;
+                    this.lineNumber = null;
+                }
+                onClickSelectLine(textarea) {
 
-            function onClickSelectLine(textarea) {
+                    let text = textarea.value;
+                    let before = text.substring(0, textarea.selectionStart);
+                    let after = text.substring(textarea.selectionEnd, text.length);
 
-                let text = textarea.value;
-                let before = text.substring(0, textarea.selectionStart);
-                let after = text.substring(textarea.selectionEnd, text.length);
+                    // Calculate line number based on newlines before the selection
+                    this.lineNumber = before.split('\n').length - 1;
 
-                // Calculate line number based on newlines before the selection
-                this.lineNumber = before.split('\n').length - 1;
+                    // Calculate start and end positions for the selected line
+                    let startPos = before.lastIndexOf("\n") >= 0 ? before.lastIndexOf("\n") + 1 : 0;
+                    let endPos = after.indexOf("\n") >= 0 ? textarea.selectionEnd + after.indexOf("\n") : text.length;
 
-                // Calculate start and end positions for the selected line
-                let startPos = before.lastIndexOf("\n") >= 0 ? before.lastIndexOf("\n") + 1 : 0;
-                let endPos = after.indexOf("\n") >= 0 ? textarea.selectionEnd + after.indexOf("\n") : text.length;
+                    textarea.selectionStart = startPos;
+                    textarea.selectionEnd = endPos;
 
-                textarea.selectionStart = startPos;
-                textarea.selectionEnd = endPos;
+                }
             }
+
+            const roomData = new TextareaDataManage();
         </script>
     </head>
     <body>
@@ -88,12 +92,15 @@
 
             <form>
                 <h1>Remove Rooms:</h1>
-                <label for="roomData">Roooms:</label><br>
-                <textarea id="roomData" rows="10" cols="40" readonly onclick="onClickSelectLine(this)"></textarea><br><br>
+                <label for="roomData">Rooms:</label><br>
+                <textarea id="roomData" rows="10" cols="40" readonly></textarea><br><br>
                 <button type="button" id="getRoom">Get Rooms</button>
                 <button type="button" id="removeRoom">Remove Room</button>
                 <script>
                     $(document).ready(function() {
+                        $('#roomData').click(function(event) {
+                            roomData.onClickSelectLine(this);
+                        });
                         getRooms();
                         $('#getRoom').click(function(event) {
                             event.preventDefault();
@@ -165,8 +172,6 @@
                     }
                 });
             }
-
-
 
         </script>
 

@@ -9,6 +9,33 @@
                 src="https://code.jquery.com/jquery-3.7.1.min.js"
                 integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
                 crossorigin="anonymous"></script>
+        <script>
+            class TextareaDataManage {
+                constructor() {
+                    this.data = null;
+                    this.lineNumber = null;
+                }
+                onClickSelectLine(textarea) {
+
+                    let text = textarea.value;
+                    let before = text.substring(0, textarea.selectionStart);
+                    let after = text.substring(textarea.selectionEnd, text.length);
+
+                    // Calculate line number based on newlines before the selection
+                    this.lineNumber = before.split('\n').length - 1;
+
+                    // Calculate start and end positions for the selected line
+                    let startPos = before.lastIndexOf("\n") >= 0 ? before.lastIndexOf("\n") + 1 : 0;
+                    let endPos = after.indexOf("\n") >= 0 ? textarea.selectionEnd + after.indexOf("\n") : text.length;
+
+                    textarea.selectionStart = startPos;
+                    textarea.selectionEnd = endPos;
+
+                }
+            }
+
+            const movieData = new TextareaDataManage();
+        </script>
     </head>
     <body>
         <div class="container-xxl my-md-4">
@@ -41,11 +68,14 @@
             <form>
                 <h1>Remove Movies:</h1>
                 <label for="movieData">Movies:</label><br>
-                <textarea id="movieData" rows="10" cols="40" readonly onclick="onClickSelectLine(this)"></textarea><br><br>
+                <textarea id="movieData" rows="10" cols="40" readonly></textarea><br><br>
                 <button type="button" id="getMovie">Get Movies</button>
                 <button type="button" id="removeMovie">Remove Movie</button>
                 <script>
                     $(document).ready(function() {
+                        $('#movieData').click(function(event) {
+                            movieData.onClickSelectLine(this);
+                        });
                         getMovies();
                         $('#getMovie').click(function(event) {
                             event.preventDefault();
@@ -109,29 +139,6 @@
                         getMovies();
                     }
                 });
-            }
-
-            const movieData = {
-                data: null,
-                lineNumber : null,
-            };
-
-            function onClickSelectLine(textarea) {
-
-                let text = textarea.value;
-                let before = text.substring(0, textarea.selectionStart);
-                let after = text.substring(textarea.selectionEnd, text.length);
-
-                // Calculate line number based on newlines before the selection
-                this.lineNumber = before.split('\n').length - 1;
-
-                // Calculate start and end positions for the selected line
-                let startPos = before.lastIndexOf("\n") >= 0 ? before.lastIndexOf("\n") + 1 : 0;
-                let endPos = after.indexOf("\n") >= 0 ? textarea.selectionEnd + after.indexOf("\n") : text.length;
-
-                textarea.selectionStart = startPos;
-                textarea.selectionEnd = endPos;
-
             }
 
         </script>
