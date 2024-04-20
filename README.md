@@ -8,7 +8,7 @@ Authentication will be implemented.
 The Frontend is to be made using React.
 
 To test the application easily, you can use the docker-compose file on this repository:
-https://github.com/Mcunha19/-cinemaApp-JAVA-SPRING-docker-compose
+https://github.com/Mcunha19/cinemaApp-JAVA-SPRING/blob/main/docker-compose/docker-compose.yml
 
 Just download the file, open the command prompt and run:
 docker compose up
